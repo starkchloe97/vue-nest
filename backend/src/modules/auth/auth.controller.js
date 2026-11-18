@@ -1,10 +1,10 @@
-import { Body, Controller, Post, Get, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { Body, BadRequestException, Controller, Post, Get, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Admin } from '../admins/admin.model.js';
 import { AuthGuard } from './auth.guard.js';
-import { UseGuards } from '@nestjs/common';
 
 const loginSchema = z.object({
   email: z.string().trim().email().max(190),
@@ -21,10 +21,14 @@ const cookieOptions = () => ({
 @Controller('api/v1/auth')
 export class AuthController {
   @Post('login')
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   async login(@Body() body, @Res({ passthrough: true }) response) {
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
-      throw new UnauthorizedException('Invalid email or password.');
+      throw new BadRequestException({
+        message: 'Invalid login payload.',
+        errors: parsed.error.flatten().fieldErrors,
+      });
     }
     if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
       throw new Error('JWT_SECRET must be configured with at least 32 characters.');

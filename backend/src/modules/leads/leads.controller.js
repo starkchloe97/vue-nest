@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '../auth/auth.guard.js';
 import { LeadsService } from './leads.service.js';
 
@@ -9,8 +10,15 @@ export class LeadsController {
   }
 
   @Post()
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   create(@Body() body) {
     return this.leadsService.create(body);
+  }
+
+  @Get('stats')
+  @UseGuards(AuthGuard)
+  getStats() {
+    return this.leadsService.getStats();
   }
 
   @Get()

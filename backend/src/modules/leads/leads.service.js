@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Op } from 'sequelize';
+import { Op, fn, col } from 'sequelize';
 import { z } from 'zod';
 import { Lead, LEAD_STATUSES } from './lead.model.js';
 
@@ -26,6 +26,20 @@ export class LeadsService {
       company: parsed.data.company || null,
       status: 'new',
     });
+  }
+
+  async getStats() {
+    const [total, grouped] = await Promise.all([
+      Lead.count(),
+      Lead.findAll({
+        attributes: ['status', [fn('COUNT', col('id')), 'count']],
+        group: ['status'],
+        raw: true,
+      }),
+    ]);
+    const byStatus = Object.fromEntries(LEAD_STATUSES.map((status) => [status, 0]));
+    for (const item of grouped) byStatus[item.status] = Number(item.count);
+    return { total, byStatus };
   }
 
   async findAll(query) {
