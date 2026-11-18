@@ -4,6 +4,7 @@ import { sequelize } from './index.js';
 @Injectable()
 class SequelizeLifecycle {
   async onModuleInit() {
+    if (process.env.NODE_ENV === 'test') return;
     await sequelize.authenticate();
     console.log('MySQL database connected successfully.');
   }

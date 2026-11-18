@@ -19,7 +19,6 @@ The migration and seed commands are explicit deployment steps. They are not exec
 - `POST /api/v1/auth/login` — admin login; sets an HttpOnly `admin_token` cookie.
 - `POST /api/v1/auth/logout` — clears the session cookie.
 - `GET /api/v1/auth/me` — current admin.
-- `GET /api/v1/leads/stats` — authenticated total and per-status counts.
 - `GET /api/v1/leads?page=1&limit=20&search=&status=` — authenticated, paginated lead list.
 - `GET /api/v1/leads/:id` — authenticated lead details.
 - `PATCH /api/v1/leads/:id/status` — authenticated status update. Allowed: `new`, `contacted`, `qualified`, `converted`, `rejected`.
