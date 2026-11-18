@@ -11,7 +11,11 @@ export class AuthGuard {
     }
 
     try {
-      request.admin = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+      const payload = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+      if (payload.role !== 'admin' || !payload.sub) {
+        throw new Error('Invalid admin token claims.');
+      }
+      request.admin = payload;
       return true;
     } catch {
       throw new UnauthorizedException('Session is invalid or expired.');

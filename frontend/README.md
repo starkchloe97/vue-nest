@@ -1,5 +1,11 @@
-# Vue 3 + Vite
+# LeadDesk Frontend
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Vue 3 + Vite + Pinia + Vue Router.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Setup
+
+1. Run `npm install`.
+2. Copy `.env.example` to `.env` if the API is not at `http://localhost:3000`, then set `VITE_API_URL`.
+3. Start the app with `npm run dev`.
+
+The public form submits to `POST /api/v1/leads`. Admin authentication uses an HttpOnly cookie; the frontend intentionally does not store JWTs in localStorage or sessionStorage. Admin routes call `GET /api/v1/auth/me` to verify the session.

@@ -1,4 +1,4 @@
-import { Global, Module, OnApplicationShutdown, Injectable } from '@nestjs/common';
+import { Global, Module, Injectable } from '@nestjs/common';
 import { sequelize } from './index.js';
 
 @Injectable()
