@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "Lead management API",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -10,6 +10,8 @@
     "format": "prettier --write \"**/*.js\"",
     "start": "node index.js",
     "start:dev": "nodemon",
+    "db:migrate": "node -r @babel/register src/database/migrate.js",
+    "db:seed-admin": "node -r @babel/register src/database/seed-admin.js",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "test:cov": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
     "test:e2e": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config ./test/jest-e2e.json"
