@@ -1,4 +1,15 @@
-import { Body, BadRequestException, Controller, Post, Get, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Bind,
+  Body,
+  BadRequestException,
+  Controller,
+  Post,
+  Get,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
@@ -22,7 +33,8 @@ const cookieOptions = () => ({
 export class AuthController {
   @Post('login')
   @Throttle({ default: { limit: 5, ttl: 60000 } })
-  async login(@Body() body, @Res({ passthrough: true }) response) {
+  @Bind(Body(), Res({ passthrough: true }))
+  async login(body, response) {
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException({
@@ -49,14 +61,16 @@ export class AuthController {
   }
 
   @Post('logout')
-  logout(@Res({ passthrough: true }) response) {
+  @Bind(Res({ passthrough: true }))
+  logout(response) {
     response.clearCookie('admin_token', cookieOptions());
     return { message: 'Logged out.' };
   }
 
   @Get('me')
   @UseGuards(AuthGuard)
-  async me(@Req() request) {
+  @Bind(Req())
+  async me(request) {
     const admin = await Admin.findByPk(request.admin.sub, {
       attributes: ['id', 'name', 'email'],
     });
