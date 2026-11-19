@@ -1,4 +1,15 @@
-import { Body, BadRequestException, Controller, Post, Get, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Bind,
+  Body,
+  Res,
+  Req,
+  BadRequestException,
+  Controller,
+  Post,
+  Get,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
