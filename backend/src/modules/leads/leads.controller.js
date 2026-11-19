@@ -21,7 +21,8 @@ export class LeadsController {
 
   @Post()
   @Throttle({ default: { limit: 10, ttl: 60000 } })
-  create(@Body() body) {
+  @Bind(Body())
+  create(body) {
     return this.leadsService.create(body);
   }
 
@@ -33,19 +34,22 @@ export class LeadsController {
 
   @Get()
   @UseGuards(AuthGuard)
-  findAll(@Query() query) {
+  @Bind(Query())
+  findAll(query) {
     return this.leadsService.findAll(query);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  findOne(@Param('id') id) {
+  @Bind(Param('id'))
+  findOne(id) {
     return this.leadsService.findOne(id);
   }
 
   @Patch(':id/status')
   @UseGuards(AuthGuard)
-  updateStatus(@Param('id') id, @Body('status') status) {
+  @Bind(Param('id'), Body('status'))
+  updateStatus(id, status) {
     return this.leadsService.updateStatus(id, status);
   }
 }
